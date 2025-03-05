@@ -6,6 +6,9 @@
     fits in a square sized (imgSize x imgSize), useful for image collection for model training.
     Close the camera by pressing the 0 key.
 
+    ** Image collection **
+    Press "a" key to take a picture of imgWhite.
+
     Warning: Code crashes when the hand limits are outside the image.
 
     Code adapted from cvzone. Module and examples can be found in:
@@ -22,6 +25,10 @@ cap = cv2.VideoCapture(0)
 detector = HandDetector(maxHands = 1)
 offset = 20
 imgSize = 300
+
+# Change folders every time
+folder = "Images\\test_run_images\\hello"
+counter = 0
 
 while True:
     success, img = cap.read()
@@ -65,8 +72,14 @@ while True:
         cv2.imshow("White", imgWhite)
 
     cv2.imshow("Image", img)
+
+    # Press a to take a picture and save in folder
+    if cv2.waitKey(1) == ord('a'):
+        counter += 1
+        cv2.imwrite(f'{folder}\\Image_{counter}.jpg', imgWhite)
+        print("Image taken.")
     
-    if cv2.waitKey(1) == ord('0'):
+    elif cv2.waitKey(1) == ord('0'):
         break
 
 # Gracefully close the program
