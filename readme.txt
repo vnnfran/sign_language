@@ -18,13 +18,14 @@ Project phases:
 3. Test camera connection. - Done
 4. Configure mediapipe. - Done
 5. Test hand marker recognition. - Done
-6. Code script for picture taking.
-7. Code script for ANN training.
-8. Train ANN.
-9. Test ANN.
-10. Set up real-time implementation.
-11. Tests.
-12. Presentation.
+6. Code script for picture collection. - Done
+7. Take pictures.
+8. Code script for ANN training.
+9. Train ANN.
+10. Test ANN.
+11. Set up real-time implementation.
+12. Tests.
+13. Presentation.
 Extra: Repeat for a CNN model and compare.
 
 Activating the venv:
