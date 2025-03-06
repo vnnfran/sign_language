@@ -17,48 +17,28 @@
 
 """
 
-import os
 import cv2
 import math
-import torch
 import numpy as np
-import torch.nn as nn
-import torch.nn.functional as F
 from cvzone.HandTrackingModule import HandDetector
+from cvzone.ClassificationModule import Classifier
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 detector = HandDetector(maxHands = 1)
+print("Detector loaded.")
+
 offset = 20
 imgSize = 150
 
-### Load model ###
-class MultilayerPerceptron(nn.Module):
-    def __init__(self, in_sz=22500, out_sz=5, layers=[4500, 900, 180, 36]):
-        super().__init__()
-        self.fc1 = nn.Linear(in_sz,layers[0])
-        self.fc2 = nn.Linear(layers[0],layers[1])
-        self.fc3 = nn.Linear(layers[1],layers[2])
-        self.fc4 = nn.Linear(layers[2],layers[3])
-        self.fc5 = nn.Linear(layers[3],out_sz)
+labels = ["hello", "iloveyou", "no", "sorry", "yes"]
+filepath = "C:/Users/visha/OneDrive/Documentos/Code/endor/sign_language/Model"
+classifier = Classifier(f"{filepath}/Model_1.h5", f"{filepath}/labels.txt")
+print("Classifier loaded.")
 
-    def forward(self,X):
-        X = F.relu(self.fc1(X))           # ReLU as activation function.
-        X = F.relu(self.fc2(X))           # ReLU as activation function.
-        X = F.relu(self.fc3(X))           # ReLU as activation function.
-        X = F.relu(self.fc4(X))           # ReLU as activation function.
-        X = self.fc5(X)                   # Direct pass.
-        return F.log_softmax(X, dim=1)    # Get class probabilities
-
-model = MultilayerPerceptron()
-
-model_dir = "C:\\Users\\visha\\OneDrive\\Documentos\\Code\\endor\\sign_language\\Model"
-model_path = os.path.join(model_dir, "model"+".pth")
-model.load_state_dict(torch.load(model_path, weights_only=True))
-
-### Open camera and perform ###
 while True:
     success, img = cap.read()
-    hands, img = detector.findHands(img, draw=True, flipType=True)
+    imgOP = img.copy()
+    hands, img = detector.findHands(img, draw=False)
 
     if hands:
         # If hand is detected, get the coords of its bounding box
@@ -89,21 +69,18 @@ while True:
             hGap = math.ceil((imgSize - hcal)/2)
             imgWhite[:, hGap:hcal+hGap] = imgResize
 
-        input_img = cv2.cvtColor(imgWhite, cv2.COLOR_BGR2GRAY )
-        X = np.array(input_img)
-        X = X.astype(np.float32)
-        X = np.flatten(X)
-        print(X.shape)
-        #y_pred = model(X.view(X.size(0),-1))
-        #predicted = torch.max(y_pred,1)[1]
-        # print(predicted)
+        input_img = cv2.cvtColor(imgWhite, cv2.COLOR_BGR2GRAY)
+        pred, index = classifier.getPrediction(input_img, draw=True)
+        cv2.rectangle(imgOP, (x-offset,y-offset-50), (x-offset+90,y-offset), (114,57,0), cv2.FILLED)
+        cv2.putText(imgOP, labels[index], (x,y-26), cv2.FONT_HERSHEY_DUPLEX,1.5,(255,255,255),2)
+        cv2.rectangle(imgOP, (x-offset,y-offset), (x+w+offset,y+h+offset), (114,57,0), 4)
 
+        cv2.imshow("Image", imgOP)
+        
     else:
         # Create white background
         imgWhite = np.ones((imgSize, imgSize, 3), np.uint8)*255
-        # cv2.imshow("White", imgWhite)
-
-    cv2.imshow("Image", img)
+        cv2.imshow("Image", imgOP)
     
     if cv2.waitKey(1) == ord('0'):
         break

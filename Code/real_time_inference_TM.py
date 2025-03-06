@@ -25,17 +25,20 @@ from cvzone.ClassificationModule import Classifier
 
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 detector = HandDetector(maxHands = 1)
+print("Detector loaded.")
+
 offset = 20
 imgSize = 224
 
+labels = ["yes", "iloveyou", "hello", "no", "sorry"]
 filepath = "C:/Users/visha/OneDrive/Documentos/Code/endor/sign_language/TM_Model"
-classifier = Classifier(f"{filepath}/keras_Model.h5", f"{filepath}/labels.txt")
-# labels = ["yes", "iloveyou", "hello", "no", "sorry"]
+classifier = Classifier(f"{filepath}/keras_model.h5", f"{filepath}/labels.txt")
+print("Classifier loaded.")
 
 while True:
     success, img = cap.read()
     imgOP = img.copy()
-    hands, img = detector.findHands(img, draw=False)
+    hands, img = detector.findHands(img, draw=True)
 
     if hands:
         # If hand is detected, get the coords of its bounding box
@@ -66,11 +69,10 @@ while True:
             hGap = math.ceil((imgSize - hcal)/2)
             imgWhite[:, hGap:hcal+hGap] = imgResize
 
-        #pred, index = classifier.getPrediction(imgWhite, draw=True)
-        #print(pred)
-        #cv2.rectangle(imgOP, (x-offset,y-offset-50), (x-offset+90,y-offset), (114,57,0), cv2.FILLED)
-        #cv2.putText(imgOP, labels[index], (x,y-26), cv2.FONT_HERSHEY_DUPLEX,1.5,(255,255,255),2)
-        #cv2.rectangle(imgOP, (x-offset,y-offset), (x+w+offset,y+h+offset), (114,57,0), 4)
+        pred, index = classifier.getPrediction(imgWhite, draw=True)
+        cv2.rectangle(imgOP, (x-offset,y-offset-50), (x-offset+90,y-offset), (114,57,0), cv2.FILLED)
+        cv2.putText(imgOP, labels[index], (x,y-26), cv2.FONT_HERSHEY_DUPLEX,1.5,(255,255,255),2)
+        cv2.rectangle(imgOP, (x-offset,y-offset), (x+w+offset,y+h+offset), (114,57,0), 4)
 
         cv2.imshow("Image", imgOP)
         
