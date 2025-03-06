@@ -4,7 +4,7 @@
     Use cvzone's HandDetector to track one hand at a time, drawing the landmarks and the bounding box
     of the detected hand. Image is further manipulated by modifying the aspect ratio so that it always
     fits in a square sized (imgSize x imgSize), useful for image collection for model training.
-    Close the camera by pressing the 0 key.
+    Close the camera by holding the "0" key.
 
     ** Image collection **
     Press "a" key to take a picture of imgWhite.
@@ -24,10 +24,10 @@ import math
 cap = cv2.VideoCapture(0)
 detector = HandDetector(maxHands = 1)
 offset = 20
-imgSize = 300
+imgSize = 150
 
 # Change folders every time
-folder = "Images\\test_run_images\\hello"
+folder = "C:\\Users\\visha\\OneDrive\\Documentos\\Code\\endor\\sign_language\\Images\\test_run_images\\no"
 counter = 0
 
 while True:
@@ -77,7 +77,7 @@ while True:
     if cv2.waitKey(1) == ord('a'):
         counter += 1
         cv2.imwrite(f'{folder}\\Image_{counter}.jpg', imgWhite)
-        print("Image taken.")
+        print(f"Image taken {counter}")
     
     elif cv2.waitKey(1) == ord('0'):
         break

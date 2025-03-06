@@ -6,6 +6,9 @@ ELEMENTARY VERSION (20)
 TEST RUN VERSION (5):
 * I love you, yes, no, hello, sorry
 
+Used adapted ASL signs from paper:
+https://www.researchgate.net/figure/ASL-static-word-signs_fig3_337285019
+
 Main libraries used:
 * OpenCV: Get real-time video input and manage accordingly.
 * CVZONE: Use the Hand Tracking module; Mediapipe wrapper to simplify use.
