@@ -22,10 +22,10 @@ Project phases:
 4. Configure mediapipe. - Done
 5. Test hand marker recognition. - Done
 6. Code script for picture collection. - Done
-7. Take pictures.
-8. Code script for ANN training.
-9. Train ANN.
-10. Test ANN.
+7. Take pictures. - Done
+8. Code script for ANN training. - Done
+9. Train ANN. - In progress
+10. Test ANN. - In progress
 11. Set up real-time implementation.
 12. Tests.
 13. Presentation.
