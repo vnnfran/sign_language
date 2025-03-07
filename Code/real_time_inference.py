@@ -9,7 +9,7 @@
     Warning: Code crashes when the hand limits are outside the image.
 
     ** Inference **
-    Use Pytorch ANN model to predict the user's sign.
+    Use ANN model to predict the user's sign.
     Can interpret between the adapted ASL signs of "hello", "iloveyou", "no", "sorry", "yes".
 
     Code adapted from cvzone. Module and examples can be found in:
@@ -35,7 +35,7 @@ imgSize = 150
 labels = ["hello", "iloveyou", "no", "sorry", "yes"]
 filepath = "C:/Users/visha/OneDrive/Documentos/Code/endor/sign_language/Model"
 # classifier = Classifier(f"{filepath}/Model_2.keras", f"{filepath}/labels.txt")
-model = load_model(f"{filepath}/Model_2.keras")
+model = load_model(f"{filepath}/Model_20e.keras")
 # class_names = open(f"{filepath}/labels.txt", "r").readlines()
 print("Classifier loaded.")
 
