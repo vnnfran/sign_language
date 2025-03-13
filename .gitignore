@@ -165,3 +165,7 @@ Images/
 # Model folders
 Model/
 TM_Model/
+old_models/
+
+# Presentation
+Presentation/

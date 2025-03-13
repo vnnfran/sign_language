@@ -22,7 +22,6 @@ import math
 import numpy as np
 from PIL import Image
 from cvzone.HandTrackingModule import HandDetector
-from cvzone.ClassificationModule import Classifier
 from keras.models import load_model
 
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
@@ -33,9 +32,14 @@ offset = 20
 imgSize = 150
 
 labels = ["hello", "iloveyou", "no", "sorry", "yes"]
-filepath = "C:/Users/visha/OneDrive/Documentos/Code/endor/sign_language/Model"
-model = load_model(f"{filepath}/Model_20e.keras")
-# class_names = open(f"{filepath}/labels.txt", "r").readlines()
+
+# Works best but overfitted:
+filepath = "C:/Users/visha/OneDrive/Documentos/Code/endor/sign_language/old_models"
+model = load_model(f"{filepath}/Model_V2.keras")
+
+# filepath = "C:/Users/visha/OneDrive/Documentos/Code/endor/sign_language/Model"
+# model = load_model(f"{filepath}/Model_1_13ks.keras")
+
 print("Classifier loaded.")
 
 while True:
@@ -75,13 +79,21 @@ while True:
         input_img = np.array(Image.fromarray(imgWhite).convert('L'))
         input_img = input_img.astype(np.float32)
         input_img = input_img.reshape(1, 150, 150)
-        # pred, index = classifier.getPrediction(input_img, draw=True)
         prediction = model.predict(input_img)
         index = np.argmax(prediction)
+        confidence_score = prediction[0][index]
+        confidence_score = int(100*confidence_score)
 
-        cv2.rectangle(imgOP, (x-offset,y-offset-50), (x-offset+90,y-offset), (114,57,0), cv2.FILLED)
-        cv2.putText(imgOP, labels[index], (x,y-26), cv2.FONT_HERSHEY_DUPLEX,1.5,(255,255,255),2)
-        cv2.rectangle(imgOP, (x-offset,y-offset), (x+w+offset,y+h+offset), (114,57,0), 4)
+        if confidence_score > 35:
+            cv2.rectangle(imgOP, (x-offset,y-offset-30), (x-offset+150,y-offset), (114,57,0), cv2.FILLED)
+            cv2.putText(imgOP, labels[index], (x,y-26), cv2.FONT_HERSHEY_DUPLEX, 1, (255,255,255),2)
+            cv2.putText(imgOP, f"Confidence score: {confidence_score}%", (20,40), cv2.FONT_HERSHEY_DUPLEX, 0.9, (255,255,255),2)
+            cv2.rectangle(imgOP, (x-offset,y-offset), (x+w+offset,y+h+offset), (114,57,0), 4)
+        else:
+            cv2.rectangle(imgOP, (x-offset,y-offset), (x+w+offset,y+h+offset), (0,0,255), 4)
+            cv2.rectangle(imgOP, (x-offset,y-offset-30), (x-offset+150,y-offset), (0,0,255), cv2.FILLED)
+            cv2.putText(imgOP, labels[index], (x,y-26), cv2.FONT_HERSHEY_DUPLEX, 1, (255,255,255),2)
+            cv2.putText(imgOP, f"Confidence score: {confidence_score}%", (20,40), cv2.FONT_HERSHEY_DUPLEX, 0.9, (255,255,255),2)
 
         cv2.imshow("Image", imgOP)
         

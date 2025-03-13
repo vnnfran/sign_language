@@ -27,7 +27,7 @@ offset = 20
 imgSize = 150
 
 # Change folders every time
-folder = "C:\\Users\\visha\\OneDrive\\Documentos\\Code\\endor\\sign_language\\Images\\images\\no"
+folder = "C:\\Users\\visha\\OneDrive\\Documentos\\Code\\endor\\sign_language\\Images\\unseen"
 counter = 0
 
 while True:

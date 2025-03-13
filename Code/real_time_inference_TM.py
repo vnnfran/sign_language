@@ -30,9 +30,11 @@ print("Detector loaded.")
 offset = 20
 imgSize = 224
 
-labels = ["yes", "iloveyou", "hello", "no", "sorry"]
+# labels = ["yes", "iloveyou", "hello", "no", "sorry"]
+labels = ["yes", "iloveyou", "no", "sorry", "hello"]
 filepath = "C:/Users/visha/OneDrive/Documentos/Code/endor/sign_language/TM_Model"
-classifier = Classifier(f"{filepath}/keras_model.h5", f"{filepath}/labels.txt")
+# classifier = Classifier(f"{filepath}/keras_model.h5", f"{filepath}/labels.txt")
+classifier = Classifier(f"{filepath}/keras_model_2.h5", f"{filepath}/labels_2.txt")
 print("Classifier loaded.")
 
 while True:
@@ -70,9 +72,16 @@ while True:
             imgWhite[:, hGap:hcal+hGap] = imgResize
 
         pred, index = classifier.getPrediction(imgWhite, draw=True)
-        cv2.rectangle(imgOP, (x-offset,y-offset-50), (x-offset+90,y-offset), (114,57,0), cv2.FILLED)
-        cv2.putText(imgOP, labels[index], (x,y-26), cv2.FONT_HERSHEY_DUPLEX,1.5,(255,255,255),2)
-        cv2.rectangle(imgOP, (x-offset,y-offset), (x+w+offset,y+h+offset), (114,57,0), 4)
+        confidence_score = pred[index]
+        confidence_score = int(100*confidence_score)
+
+        if confidence_score > 35:
+            cv2.rectangle(imgOP, (x-offset,y-offset-30), (x-offset+150,y-offset), (114,57,0), cv2.FILLED)
+            cv2.putText(imgOP, labels[index], (x,y-26), cv2.FONT_HERSHEY_DUPLEX, 1, (255,255,255),2)
+            cv2.putText(imgOP, f"Confidence score: {confidence_score}%", (20,40), cv2.FONT_HERSHEY_DUPLEX, 0.9, (255,255,255),2)
+            cv2.rectangle(imgOP, (x-offset,y-offset), (x+w+offset,y+h+offset), (114,57,0), 4)
+        else:
+            cv2.rectangle(imgOP, (x-offset,y-offset), (x+w+offset,y+h+offset), (0,0,255), 4)
 
         cv2.imshow("Image", imgOP)
         
